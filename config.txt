@@ -1,0 +1,3 @@
+Lauren, Mearaf, Stefanie
+taking_shot, drink_bev, other
+alcohol, water
