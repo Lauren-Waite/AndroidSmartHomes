@@ -34,11 +34,11 @@ public class BacActivity extends Activity implements SensorEventListener {
     ArrayList<Float> mxValues = new ArrayList<Float>();
     ArrayList<Float> myValues = new ArrayList<Float>();
     ArrayList<Float> mzValues = new ArrayList<Float>();
-    ArrayList<Long> mtimeValues = new ArrayList<Long>();
 
     boolean isFirst = true;
-    long mEndTime;
-    long mStartTime;
+    long mEndTime = 0;
+    long mCurrentTime = 0;
+    long mStartTime = 0;
     DecimalFormat mDf;
 
     @Override
@@ -46,8 +46,10 @@ public class BacActivity extends Activity implements SensorEventListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rect_activity_bac);
 
-        preferences = this.getSharedPreferences("PROFILE_PREF", Context.MODE_PRIVATE);
+        mShotTextView = (TextView) findViewById(R.id.shot_count);
+        mBacTextView = (TextView) findViewById(R.id.bac_value);
 
+        preferences = this.getSharedPreferences("PROFILE_PREF", Context.MODE_PRIVATE);
         myWeight = preferences.getInt("weight", 0);
         genderConstant = 0.0;
         if (preferences.getInt("gender", 0) == 1) {
@@ -61,7 +63,6 @@ public class BacActivity extends Activity implements SensorEventListener {
         mDf = new DecimalFormat("0.000");
         buildTree();
     }
-
 
     protected void onStart() {
         super.onStart();
@@ -89,19 +90,18 @@ public class BacActivity extends Activity implements SensorEventListener {
         if(isFirst) {
             isFirst = false;
             mEndTime = timestamp_seconds + 3;
-            mStartTime = timestamp_seconds;
         }
+
         mxValues.add(event.values[0]);
         myValues.add(event.values[1]);
         mzValues.add(event.values[2]);
-        mtimeValues.add(timestamp_seconds);
+        mCurrentTime = timestamp_seconds;
 
         if(timestamp_seconds == mEndTime) {
             extractAndClassify();
             mxValues.clear();
             myValues.clear();
             mzValues.clear();
-            mtimeValues.clear();
             mEndTime = mEndTime + 3;
         }
     }
@@ -121,16 +121,17 @@ public class BacActivity extends Activity implements SensorEventListener {
         features.add(calcRms(myValues));
         features.add(calcRms(mzValues));
 
-        mShotTextView = (TextView) findViewById(R.id.shot_count);
         int currcount = Integer.parseInt(mShotTextView.getText().toString());
-        mBacTextView = (TextView) findViewById(R.id.bac_value);
         if(classify(features, mRoot)) {
+            if(currcount == 0) {
+                mStartTime = mCurrentTime;
+            }
             currcount++;
             mShotTextView.setText(Integer.toString(currcount));
         }
 
-        float bac = calcBAC(currcount);
-        if(bac > 0) {
+        if(currcount > 0) {
+            float bac = calcBAC(currcount);
             mBacTextView.setText(mDf.format(bac));
         }
     }
@@ -320,7 +321,7 @@ public class BacActivity extends Activity implements SensorEventListener {
     public  float calcBAC(int shotCount) {
         float weightGram = (float)myWeight * (float)453.592;
         float bac = 100 * ((shotCount*14)/(weightGram * (float)genderConstant));
-        long timeElapsed =  mEndTime/3600 - mStartTime/3600;
+        long timeElapsed =  mCurrentTime/3600 - mStartTime/3600;
 
         bac = bac - (float)(timeElapsed*.015);
         return bac;
