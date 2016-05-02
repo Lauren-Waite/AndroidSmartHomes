@@ -1,0 +1,24 @@
+ std_y <= 4.58514
+|    std_y <= 1.59657: not_taking_shot (108.0)
+|    std_y > 1.59657
+|   |    med_y <= 2.848432
+|   |   |    med_y <= -8.052205
+|   |   |   |    std_z <= 3.570705: taking_shot (6.0/1.0)
+|   |   |   |    std_z > 3.570705: not_taking_shot (6.0)
+|   |   |    med_y > -8.052205: not_taking_shot (96.0/3.0)
+|   |    med_y > 2.848432
+|   |   |    std_x <= 1.214686: taking_shot (5.0)
+|   |   |    std_x > 1.214686: not_taking_shot (3.0/1.0)
+ std_y > 4.58514
+|    rms_z <= 6.521764
+|   |    med_x <= -4.337276
+|   |   |    med_y <= 1.728208
+|   |   |   |    std_z <= 2.119251: taking_shot (10.0)
+|   |   |   |    std_z > 2.119251
+|   |   |   |   |    mean_y <= -1.175139: not_taking_shot (2.0)
+|   |   |   |   |    mean_y > -1.175139: taking_shot (2.0)
+|   |   |    med_y > 1.728208: not_taking_shot (5.0/1.0)
+|   |    med_x > -4.337276: taking_shot (52.0)
+|    rms_z > 6.521764
+|   |    med_z <= 7.046877: not_taking_shot (9.0/1.0)
+|   |    med_z > 7.046877: taking_shot (4.0)

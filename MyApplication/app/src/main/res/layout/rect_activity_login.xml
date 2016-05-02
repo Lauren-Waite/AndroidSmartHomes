@@ -13,34 +13,34 @@
     android:gravity="center_vertical"
     tools:context="smarthomes.group07.smart_homes_application.LoginActivity"
     tools:deviceIds="wear_square">
+    
+    <Spinner
+        android:id="@+id/weight_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/weight_array"
+        android:prompt="@string/weight_prompt"/>
 
-        <EditText
-            android:id="@+id/weight_value"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/add_weight"
-            android:inputType="number"/>
-
-        <RadioGroup
+    <RadioGroup
             android:id="@+id/gender_radio_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <RadioButton
-                android:id="@+id/radio_male"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/male_option"
-                android:onClick="onRadioButtonClicked"
-                />
-            <RadioButton
+        <RadioButton
+            android:id="@+id/radio_male"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/male_option"
+            android:onClick="onRadioButtonClicked"
+            />
+        <RadioButton
                 android:id="@+id/radio_female"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/female_option"
                 android:onClick="onRadioButtonClicked"
                 />
-        </RadioGroup>
+    </RadioGroup>
 
         <Button
             android:layout_width="match_parent"

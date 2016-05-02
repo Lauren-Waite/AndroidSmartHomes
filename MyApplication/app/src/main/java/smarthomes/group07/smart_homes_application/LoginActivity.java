@@ -4,24 +4,34 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.wearable.view.WatchViewStub;
-import android.widget.EditText;
+import android.widget.AdapterView;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
+import android.widget.Spinner;
 import android.view.View;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends Activity implements AdapterView.OnItemSelectedListener {
     SharedPreferences preferences;
     private int genderSelection = -1;
+    private int weightSelection = 0;
+    private Spinner mWeightSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.rect_activity_login);
 
-        preferences = this.getPreferences(Context.MODE_PRIVATE);
+        preferences = this.getSharedPreferences("PROFILE_PREF", Context.MODE_PRIVATE);
+        mWeightSpinner = (Spinner) findViewById(R.id.weight_spinner);
+        mWeightSpinner.setOnItemSelectedListener(this);
 
+    }
+
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        weightSelection = (10 * pos) + 60;
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Blank interface method
     }
 
     public void onRadioButtonClicked(View view) {
@@ -42,24 +52,20 @@ public class LoginActivity extends Activity {
 
 
     public void submitData(View view) {
-        RadioGroup genderGroup = ((RadioGroup) findViewById(R.id.gender_radio_group));
-        EditText weightView = ((EditText) findViewById(R.id.weight_value));
-        String weightString = weightView.getText().toString();
 
         SharedPreferences.Editor prefEditor = preferences.edit();
 
-        if(weightString.equals("")) {
-            weightView.setError("Please enter a number");
-        } else {
-            int weightVal = Integer.parseInt(weightString);
-            prefEditor.putInt("weight", weightVal);
+        if(weightSelection != 0) {
+            prefEditor.putInt("weight", weightSelection);
+            prefEditor.apply();
         }
 
         if (genderSelection != -1) {
             prefEditor.putInt("gender", genderSelection);
+            prefEditor.apply();
         }
 
-        if(!weightString.equals("") && genderSelection != -1) {
+        if(weightSelection != 0 && genderSelection != -1) {
             finish();
         }
     }
